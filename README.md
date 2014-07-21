@@ -53,7 +53,7 @@ Creating new password for entry taxes
 (crypto-pass): Retype in your password:
 (crypto-pass): Length of generated key in bytes:  (32)
 (crypto-pass): Number of iterations in PBKDF2:  (100000)
-(crypto-pass): stripPadding:  (yes)
+(crypto-pass): Strip base64 padding (=) off end of key:  (yes)
 Storing data in /Users/james/.crypto-pass
 
 Generated Key

@@ -206,10 +206,12 @@ function newPassword(name) {
         required: true
       },
       stripPadding: {
-        description: "Strip base64 padding off key (=)",
+        name: 'stripPadding',
+        message: "Strip base64 padding (=) off end of key",
         validator: /y[es]*|n[o]?/,
         warning: 'Must respond yes or no',
-        default: 'yes'
+        default: 'yes',
+        required: true
       }
     }
   };
