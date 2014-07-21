@@ -352,13 +352,13 @@ function pad(num, size) {
 }
 
 function backupCache() {
-  var backupConfig = config.backupConfig;
+  var backupConfig = cache.backupConfig;
   var backupConfigUsage = function() {
     warnLog("config file needs the following json property:");
     infoLog("'backupConfig': {");
     infoLog("    'directory': 'Directory to copy file on remote machine'");
     infoLog("    'host': 'Name of host (PuTTY session name for win, user@host for linux/mac)'");
-    infoLog("    'sftp': 'Option path of sftp program'");
+    infoLog("    'sftp': '(Optional) path of the sftp program'");
     infoLog("}");
     process.exit(1);
   }
