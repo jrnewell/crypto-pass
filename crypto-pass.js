@@ -195,7 +195,7 @@ function newPassword(name) {
     }
   };
 
-  if (name && cache.hasOwnProperty(name)) {
+  if (name) {
     titleLog("Creating new password for entry " + name);
     delete promptConfig.properties.name;
   }

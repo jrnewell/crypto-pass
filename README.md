@@ -1,6 +1,6 @@
 # Crypto Pass
 
-A utility to create, store and retrieve PBKDF2-genereated passwords on a local machine.
+A utility to create, store and retrieve PBKDF2-genereated/salted passwords on a local machine.
 
 ## Install
 
@@ -42,6 +42,39 @@ Usage: crypto-pass [options] [command]
     -h, --help           output usage information
     -V, --version        output the version number
     -c, --config <path>  configuration file path
+
+```
+
+## Example
+
+```shell
+
+$ crypto-pass new taxes
+Creating new password for entry taxes
+(crypto-pass): Type in your password:
+(crypto-pass): Retype in your password:
+(crypto-pass): Length of generated key in bytes:  (32)
+(crypto-pass): Number of iterations in PBKDF2:  (100000)
+Storing data in /Users/james/.crypto-pass
+
+Generated Key
+------------------
+Key: J75h758+ZO8eqjR5wyLCPMaf5TLAmJyGXrPP7dew16g=
+
+Entry Metadata
+------------------
+Salt: jdg7z454u+QMhFzw5g8o9w==
+Key Length: 32
+Iterations: 100000
+
+$ crypto-pass get taxes
+Retrieving password for entry taxes
+(crypto-pass): Type in your password:
+
+Generated Key
+------------------
+Key: J75h758+ZO8eqjR5wyLCPMaf5TLAmJyGXrPP7dew16g=
+
 
 ```
 
