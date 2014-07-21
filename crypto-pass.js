@@ -89,7 +89,7 @@ function runCommand(cmd) {
     }
 
     // load config
-    config = cache.config;
+    config = cache._config;
 
     cmd.apply(this, arguments);
   }
@@ -373,10 +373,10 @@ function pad(num, size) {
 }
 
 function backupCache() {
-  var backupConfig = cache.backupConfig;
+  var backupConfig = cache._backupConfig;
   var backupConfigUsage = function() {
     warnLog("config file needs the following json property:");
-    infoLog("'backupConfig': {");
+    infoLog("'_backupConfig': {");
     infoLog("    'directory': 'Directory to copy file on remote machine'");
     infoLog("    'host': 'Name of host (PuTTY session name for win, user@host for linux/mac)'");
     infoLog("    'sftp': '(Optional) path of the sftp program'");
