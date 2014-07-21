@@ -10,10 +10,10 @@
     "url": "git://github.com/jrnewell/crypto-pass.git"
   },
   "dependencies": {
-    "prompt": "*",
-    "commander": "*",
-    "jsonfile": "*",
-    "colors": "*"
+    "prompt": "~0.2.13",
+    "commander": "~2.3.0",
+    "jsonfile": "~1.2.0",
+    "colors": "~0.6.2"
   },
   "keywords": [
     "crypto", "pass", "password", "PBKDF2", "base64", "utility"
