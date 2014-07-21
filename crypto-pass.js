@@ -11,10 +11,11 @@ var exec = require('child_process').exec;
 
 var cache = {};
 var cacheFile;
+var config;
 
 commander
   .version(require('./package.json').version)
-  .option('-c, --config <path>', 'configuration file path');
+  .option('-c, --cache <path>', 'cache/configuration file path');
 
 commander
   .command('get [entry]')
@@ -86,8 +87,20 @@ function runCommand(cmd) {
     if (fs.existsSync(cacheFile)) {
       cache = jsonfile.readFileSync(cacheFile);
     }
+
+    // load config
+    config = cache.config;
+
     cmd.apply(this, arguments);
   }
+}
+
+function toBase64(buffer) {
+  var str = key.toString('base64');
+  if (config && config.stripPadding) {
+    str = str.replace(/=+$/g, '');
+  }
+  return str;
 }
 
 function confirmPrompt(message, callback) {
@@ -149,7 +162,7 @@ function getPassword(name) {
     key = crypto.pbkdf2Sync(password, salt, iterations, keyLength);
     console.log("\nGenerated Key");
     console.log("------------------");
-    console.log("Key: " + key.toString('base64').grey);
+    console.log("Key: " + toBase64(key).grey);
 
     process.exit(0);
   });
@@ -226,7 +239,7 @@ function newPassword(name) {
       key = crypto.pbkdf2Sync(password, salt, iterations, keyLength);
       console.log("\nGenerated Key");
       console.log("------------------");
-      console.log("Key: " + key.toString('base64').grey);
+      console.log("Key: " + toBase64(key).grey);
 
       console.log("\nEntry Metadata");
       console.log("------------------");
