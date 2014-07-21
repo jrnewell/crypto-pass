@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var prompt = require('prompt');
 var jsonfile = require('jsonfile');
 var commander = require('commander');
+var colors = require('colors');
 var path = require('path');
 var fs = require('fs');
 var exec = require('child_process').exec;
@@ -56,12 +57,30 @@ if (commander.args.length < 1) {
   runCommand(getPassword)();
 }
 
+function errorLog(str) {
+  console.error(str.red);
+  process.exit(1);
+}
+
+function warnLog(str) {
+  console.error(str.yellow);
+}
+
+function titleLog(str) {
+  console.log(str.cyan);
+}
+
+function infoLog(str) {
+  console.log(str.grey);
+}
+
 function getUserHome() {
   return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
 function runCommand(cmd) {
   return function() {
+    prompt.message = "(crypto-pass)";
     cacheFile = (commander.config ? commander.config : path.join(getUserHome(), ".crypto-pass"));
 
     if (fs.existsSync(cacheFile)) {
@@ -70,8 +89,6 @@ function runCommand(cmd) {
     cmd.apply(this, arguments);
   }
 }
-
-prompt.message = "(crypto-pass)";
 
 function confirmPrompt(message, callback) {
   var promptConfig = {
@@ -112,20 +129,17 @@ function getPassword(name) {
   };
 
   if (name && cache.hasOwnProperty(name)) {
-    console.log("Retrieving password for entry " + name);
+    titleLog("Retrieving password for entry " + name);
     delete promptConfig.properties.name;
   }
   else {
-    console.log("Retrieving password");
+    titleLog("Retrieving password");
     name = null;
   }
 
   prompt.start();
   prompt.get(promptConfig, function (err, results) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
+    if (err) errorLog(err);
     var cacheEntry = (name ? cache[name] : cache[results.name]);
     var password = results.password;
     var salt = new Buffer(cacheEntry.salt, 'base64');
@@ -133,9 +147,9 @@ function getPassword(name) {
     var iterations = cacheEntry.iterations;
 
     key = crypto.pbkdf2Sync(password, salt, iterations, keyLength);
-    console.log("Generated Key");
+    console.log("\nGenerated Key");
     console.log("------------------");
-    console.log("Key: " + key.toString('base64'));
+    console.log("Key: " + key.toString('base64').grey);
 
     process.exit(0);
   });
@@ -182,20 +196,17 @@ function newPassword(name) {
   };
 
   if (name && cache.hasOwnProperty(name)) {
-    console.log("Creating new password for entry " + name);
+    titleLog("Creating new password for entry " + name);
     delete promptConfig.properties.name;
   }
   else {
-    console.log("Creating new password");
+    titleLog("Creating new password");
     name = null;
   }
 
   prompt.start();
   prompt.get(promptConfig, function (err, results) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
+    if (err) errorLog(err);
 
     var _name = (name ? name : results.name);
     var setNewPassword = function() {
@@ -213,24 +224,21 @@ function newPassword(name) {
       jsonfile.writeFileSync(cacheFile, cache);
 
       key = crypto.pbkdf2Sync(password, salt, iterations, keyLength);
-      console.log("Generated Key");
+      console.log("\nGenerated Key");
       console.log("------------------");
-      console.log("Key: " + key.toString('base64'));
+      console.log("Key: " + key.toString('base64').grey);
 
       console.log("\nEntry Metadata");
       console.log("------------------");
-      console.log("Salt: " + salt.toString('base64'));
-      console.log("Key Length: " + keyLength);
-      console.log("Iterations: " + iterations);
+      console.log("Salt: " + salt.toString('base64').grey);
+      console.log("Key Length: " + keyLength.toString().grey);
+      console.log("Iterations: " + iterations.toString().grey);
       process.exit(0);
     };
 
     if (cache.hasOwnProperty(_name)) {
       confirmPrompt("Entry '" + _name + "' already exists.  Are you sure you want to overwrite?", function(err, confirm) {
-        if (err) {
-          console.error(err);
-          process.exit(1);
-        }
+        if (err) errorLog(err);
 
         if (confirm) {
           setNewPassword();
@@ -247,7 +255,7 @@ function listEntries() {
   console.log("Entry Names");
   console.log("------------------");
   for (var key in cache) {
-    console.log(key);
+    infoLog(key);
   }
 }
 
@@ -266,30 +274,28 @@ function entryMetadata(name) {
   };
 
   if (name && cache.hasOwnProperty(name)) {
-    console.log("Retrieving encryption metadata for entry " + name);
+    titleLog("Retrieving encryption metadata for entry " + name);
     delete promptConfig.properties.name;
   }
   else {
-    console.log("Retrieving encryption metadata");
+    titleLog("Retrieving encryption metadata");
     name = null;
   }
 
   prompt.start();
   prompt.get(promptConfig, function (err, results) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
+    if (err) errorLog(err);
+
     var cacheEntry = (name ? cache[name] : cache[results.name]);
     var salt = new Buffer(cacheEntry.salt, 'base64');
     var keyLength = cacheEntry.keyLength;
     var iterations = cacheEntry.iterations;
 
-    console.log("Entry Metadata");
+    console.log("\nEntry Metadata");
     console.log("------------------");
-    console.log("Salt: " + salt.toString('base64'));
-    console.log("Key Length: " + keyLength);
-    console.log("Iterations: " + iterations);
+    console.log("Salt: " + salt.toString('base64').grey);
+    console.log("Key Length: " + keyLength.toString().grey);
+    console.log("Iterations: " + iterations.toString().grey);
     process.exit(0);
   });
 }
@@ -309,32 +315,26 @@ function deleteEntry(name) {
   };
 
   if (name && cache.hasOwnProperty(name)) {
-    console.log("Deleting password for entry " + name);
+    titleLog("Deleting password for entry " + name);
     delete promptConfig.properties.name;
   }
   else {
-    console.log("Deleting password");
+    titleLog("Deleting password");
     name = null;
   }
 
   prompt.start();
   prompt.get(promptConfig, function (err, results) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
+    if (err) errorLog(err);
 
     var _name = (name ? name: results.name);
     confirmPrompt("Are you sure you want to delete entry '" + _name + "' ?", function(err, confirm) {
-      if (err) {
-        console.error(err);
-        process.exit(1);
-      }
+      if (err) errorLog(err);
 
       if (confirm) {
-        console.log("Deleting Entry");
+        console.log("\nDeleting Entry");
         console.log("------------------");
-        console.log(_name);
+        infoLog(_name);
 
         delete cache[_name];
         jsonfile.writeFileSync(cacheFile, cache);
@@ -354,12 +354,12 @@ function pad(num, size) {
 function backupCache() {
   var backupConfig = config.backupConfig;
   var backupConfigUsage = function() {
-    console.log("config file needs the following json property:");
-    console.log("'backupConfig': {");
-    console.log("    'directory': 'Directory to copy file on remote machine'");
-    console.log("    'host': 'Name of host (PuTTY session name for win, user@host for linux/mac)'");
-    console.log("    'sftp': 'Option path of sftp program'");
-    console.log("}");
+    warnLog("config file needs the following json property:");
+    infoLog("'backupConfig': {");
+    infoLog("    'directory': 'Directory to copy file on remote machine'");
+    infoLog("    'host': 'Name of host (PuTTY session name for win, user@host for linux/mac)'");
+    infoLog("    'sftp': 'Option path of sftp program'");
+    infoLog("}");
     process.exit(1);
   }
 
@@ -367,7 +367,7 @@ function backupCache() {
     backupConfigUsage();
   }
 
-  console.log("Backing up config file to " + backupConfig.host);
+  titleLog("Backing up config file to " + backupConfig.host);
 
   var now = new Date();
   var suffix = "" + now.getFullYear() + pad((now.getMonth() + 1), 2) + pad(now.getDate(), 2) +
@@ -385,12 +385,9 @@ function backupCache() {
 
   console.log(cmd);
   var child = exec(cmd + backupConfig.host, function(err, stdout, stderr){
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
-    console.error('stderr: ' + stderr);
-    console.log('stdout: ' + stdout);
+    if (err) errorLog(err);
+    infoLog('stderr: ' + stderr);
+    infoLog('stdout: ' + stdout);
   });
 
   child.stdin.write("cd " + backupConfig.directory + "\n");
