@@ -18,27 +18,27 @@ commander
 
 commander
   .command('get [entry]')
-  .description('retrieve password entry')
+  .description('retrieve a password from entry')
   .action(runCommand(getPassword));
 
 commander
   .command('new [entry]')
-  .description('create new password entry')
+  .description('create a new entry')
   .action(runCommand(newPassword));
 
 commander
   .command('list')
-  .description('list password entries')
+  .description('list entries')
   .action(runCommand(listEntries));
 
 commander
   .command('meta [entry]')
-  .description('output encryption metadata for password entry')
+  .description('output encryption metadata for an entry')
   .action(runCommand(entryMetadata));
 
 commander
   .command('del [entry]')
-  .description('delete password entry')
+  .description('delete an entry')
   .action(runCommand(deleteEntry));
 
 commander

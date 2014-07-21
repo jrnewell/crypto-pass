@@ -1,6 +1,6 @@
 # Crypto Pass
 
-A utility to create, store and retrieve PBKDF2-genereated/salted passwords on a local machine.
+A utility to create, store and retrieve salted PBKDF2-genereated passwords on a local machine.  Works well in combination with 7-Zip's AES-256 password-protect/encrypt archive feature to encrypt senstive documents with a strong password.
 
 ## Install
 
@@ -11,31 +11,27 @@ npm install -g crypto-pass
 ## Usage
 ```shell
 
-Usage: crypto-pass [options] [command]
+  Usage: crypto-pass [options] [command]
 
   Commands:
 
     get [entry]
-       retrieve password entry
+       retrieve a password from entry
 
     new [entry]
-       create new password entry
+       create a new entry
 
     list
-       list password entries
+       list entries
 
     meta [entry]
-       output encryption metadata for password entry
+       output encryption metadata for an entry
 
     del [entry]
-       delete password entry
+       delete an entry
 
     backup
        backup config file using sftp
-
-    *
-       output usage information
-
 
   Options:
 
@@ -76,7 +72,6 @@ Retrieving password for entry taxes
 Generated Key
 ------------------
 Key: J75h758+ZO8eqjR5wyLCPMaf5TLAmJyGXrPP7dew16g=
-
 
 ```
 
