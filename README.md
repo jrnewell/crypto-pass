@@ -45,6 +45,8 @@ Usage: crypto-pass [options] [command]
 
 ```
 
+Default location for config file is $HOME/.crypto-pass
+
 ## Example
 
 ```shell
