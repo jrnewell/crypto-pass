@@ -1,0 +1,29 @@
+{
+  "name": "crypto-pass",
+  "version": "0.0.1",
+  "description": "A utility to create, store and retrieve PBKDF2-genereated password on a local machine",
+  "bin": {
+    "crypto-pass": "./crypto-pass.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jrnewell/crypto-pass.git"
+  },
+  "dependencies": {
+    "prompt": "*",
+    "commander": "*",
+    "jsonfile": "*"
+  },
+  "keywords": [
+    "crypto", "pass", "password", "PBKDF2", "base64", "utility"
+  ],
+  "author": "James Newell <james.newell@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jrnewell/crypto-pass/issues"
+  },
+  "engines": {
+    "node": ">=0.10",
+    "npm": ">=1.4"
+  }
+}
