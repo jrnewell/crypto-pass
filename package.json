@@ -1,7 +1,7 @@
 {
   "name": "crypto-pass",
   "version": "0.0.1",
-  "description": "A utility to create, store and retrieve PBKDF2-genereated password on a local machine",
+  "description": "A utility to create, store and retrieve PBKDF2-genereated passwords on a local machine",
   "bin": {
     "crypto-pass": "./crypto-pass.js"
   },
