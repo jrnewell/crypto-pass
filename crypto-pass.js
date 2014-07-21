@@ -95,9 +95,9 @@ function runCommand(cmd) {
   }
 }
 
-function toBase64(buffer) {
+function toBase64(buffer, stripPadding) {
   var str = key.toString('base64');
-  if (config && config.stripPadding) {
+  if (stripPadding) {
     str = str.replace(/=+$/g, '');
   }
   return str;
@@ -116,7 +116,7 @@ function confirmPrompt(message, callback) {
     if (err) {
       return callback(err);
     }
-    confirm = (results.yesno && (results.yesno === 'yes' || results.yesno === 'y')) ? true : false;
+    var confirm = (results.yesno && (results.yesno === 'yes' || results.yesno === 'y')) ? true : false;
     return callback(null, confirm);
   });
 }
@@ -162,7 +162,7 @@ function getPassword(name) {
     key = crypto.pbkdf2Sync(password, salt, iterations, keyLength);
     console.log("\nGenerated Key");
     console.log("------------------");
-    console.log("Key: " + toBase64(key).grey);
+    console.log("Key: " + toBase64(key, cacheEntry.stripPadding).grey);
 
     process.exit(0);
   });
@@ -201,9 +201,15 @@ function newPassword(name) {
       },
       iterations: {
         description: "Number of iterations in PBKDF2",
-         pattern: /^[0-9]+$/,
+        pattern: /^[0-9]+$/,
         default: 100000,
         required: true
+      },
+      stripPadding: {
+        description: "Strip base64 padding off key (=)",
+        validator: /y[es]*|n[o]?/,
+        warning: 'Must respond yes or no',
+        default: 'yes'
       }
     }
   };
@@ -227,19 +233,21 @@ function newPassword(name) {
       var salt = crypto.randomBytes(16);
       var keyLength = parseInt(results.keyLength);
       var iterations = parseInt(results.iterations);
+      var stripPadding = (results.stripPadding && (results.stripPadding === 'yes' || results.stripPadding === 'y')) ? true : false;
 
       console.log("Storing data in " + cacheFile);
       cache[_name] = {
         salt: salt.toString('base64'),
         keyLength: keyLength,
-        iterations: iterations
+        iterations: iterations,
+        stripPadding: stripPadding
       };
       jsonfile.writeFileSync(cacheFile, cache);
 
       key = crypto.pbkdf2Sync(password, salt, iterations, keyLength);
       console.log("\nGenerated Key");
       console.log("------------------");
-      console.log("Key: " + toBase64(key).grey);
+      console.log("Key: " + toBase64(key, stripPadding).grey);
 
       console.log("\nEntry Metadata");
       console.log("------------------");
