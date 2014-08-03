@@ -407,7 +407,7 @@ function backupCache() {
   cmd += (process.platform == 'win32' ? " -load " : " ") + backupConfig.host;
 
   console.log(cmd);
-  var child = exec(cmd + backupConfig.host, function(err, stdout, stderr){
+  var child = exec(cmd, function(err, stdout, stderr){
     if (err) errorLog(err);
     infoLog('stderr: ' + stderr);
     infoLog('stdout: ' + stdout);
