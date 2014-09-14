@@ -1,6 +1,6 @@
 {
   "name": "crypto-pass",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A utility to create, store and retrieve salted PBKDF2-genereated passwords on a local machine",
   "bin": {
     "crypto-pass": "./crypto-pass.js"

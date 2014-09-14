@@ -12,6 +12,7 @@ var exec = require('child_process').exec;
 var cache = {};
 var cacheFile;
 var config;
+var backupConfig;
 
 commander
   .version(require('./package.json').version)
@@ -88,8 +89,15 @@ function runCommand(cmd) {
       cache = jsonfile.readFileSync(cacheFile);
     }
 
+    function getAndRemove(prop, obj) {
+      val = obj[prop];
+      delete obj[prop];
+      return val;
+    }
+
     // load config
-    config = cache._config;
+    config = getAndRemove("_config", cache);
+    backupConfig = getAndRemove("_backupConfig", cache);
 
     cmd.apply(this, arguments);
   }
@@ -375,7 +383,6 @@ function pad(num, size) {
 }
 
 function backupCache() {
-  var backupConfig = cache._backupConfig;
   var backupConfigUsage = function() {
     warnLog("config file needs the following json property:");
     infoLog("'_backupConfig': {");
